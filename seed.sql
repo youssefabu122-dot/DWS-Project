@@ -4,7 +4,6 @@
 INSERT INTO Circle (name, contribution_amount, start_date)
 VALUES ('Savings Circle', 1000.00, '2026-01-01');
 
-
 -- Insert ten members
 INSERT INTO Member (name, email) VALUES
 ('Ahmed Ali', 'ahmed@example.com'),
@@ -17,7 +16,6 @@ INSERT INTO Member (name, email) VALUES
 ('Karim Mostafa', 'karim@example.com'),
 ('Amr Nabil', 'amr@example.com'),
 ('Abdo Ahmed', 'Abdo@example.com');
-
 
 -- Add all members to the circle
 INSERT INTO Membership (member_id, circle_id, joined_on) VALUES
@@ -32,8 +30,7 @@ INSERT INTO Membership (member_id, circle_id, joined_on) VALUES
 (9, 1, '2026-01-01'),
 (10, 1, '2026-01-01');
 
-
---  six cycles
+-- Six cycles
 INSERT INTO Cycle (circle_id, seq_no, status) VALUES
 (1, 1, 'closed'),
 (1, 2, 'closed'),
@@ -41,7 +38,6 @@ INSERT INTO Cycle (circle_id, seq_no, status) VALUES
 (1, 4, 'closed'),
 (1, 5, 'closed'),
 (1, 6, 'open');
-
 
 -- Insert contributions for Cycle 1
 INSERT INTO Contribution (member_id, cycle_id) VALUES
@@ -72,7 +68,6 @@ INSERT INTO Contribution (member_id, cycle_id) VALUES
 INSERT INTO Contribution (member_id, cycle_id) VALUES
 (1,6),(2,6),(3,6),(4,6),(5,6),
 (6,6),(7,6),(8,6),(9,6),(10,6);
-
 
 -- Insert bids for Cycle 1
 INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
@@ -114,7 +109,6 @@ INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
 (8, 5, 8.00),
 (9, 5, 10.00);
 
-
 -- Insert one payout for each closed cycle
 INSERT INTO Payout (cycle_id, member_id, paid_at) VALUES
 (1, 2, '2026-01-31 12:00:00'),
@@ -122,7 +116,6 @@ INSERT INTO Payout (cycle_id, member_id, paid_at) VALUES
 (3, 5, '2026-03-31 12:00:00'),
 (4, 7, '2026-04-30 12:00:00'),
 (5, 9, '2026-05-31 12:00:00');
-
 
 -- Insert discount shares for Cycle 1 payout
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
@@ -136,7 +129,6 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (1, 9, 111.11),
 (1, 10, 111.12);
 
-
 -- Insert discount shares for Cycle 2 payout
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (2, 1, 100.00),
@@ -148,7 +140,6 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (2, 8, 100.00),
 (2, 9, 100.00),
 (2, 10, 100.00);
-
 
 -- Insert discount shares for Cycle 3 payout
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
@@ -162,7 +153,6 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (3, 9, 88.89),
 (3, 10, 88.88);
 
-
 -- Insert discount shares for Cycle 4 payout
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (4, 1, 100.00),
@@ -174,7 +164,6 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (4, 8, 100.00),
 (4, 9, 100.00),
 (4, 10, 100.00);
-
 
 -- Insert discount shares for Cycle 5 payout
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
