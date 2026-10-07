@@ -1,0 +1,143 @@
+# Validation and security test log
+
+Date: 2026-10-07 (Asia/Dubai).
+
+135 integration checks passed, 0 failed, against real MySQL on a temporary database. Existing project data was not changed. Additional isolated checks passed for rate limiting (429), rate-limit headers and generic 500 errors. Syntax checks passed for 28 JavaScript files. Tests invoked the Express app directly; they did not replay the collection or verify the complete startup process.
+
+- PASS: members empty list
+- PASS: members missing GET
+- PASS: members missing DELETE
+- PASS: members invalid id 0
+- PASS: members invalid id -1
+- PASS: members invalid id abc
+- PASS: members invalid id 2147483648
+- PASS: members invalid id 1%20OR%201=1
+- PASS: circles empty list
+- PASS: circles missing GET
+- PASS: circles missing DELETE
+- PASS: circles invalid id 0
+- PASS: circles invalid id -1
+- PASS: circles invalid id abc
+- PASS: circles invalid id 2147483648
+- PASS: circles invalid id 1%20OR%201=1
+- PASS: contributions empty list
+- PASS: contributions missing GET
+- PASS: contributions missing DELETE
+- PASS: contributions invalid id 0
+- PASS: contributions invalid id -1
+- PASS: contributions invalid id abc
+- PASS: contributions invalid id 2147483648
+- PASS: contributions invalid id 1%20OR%201=1
+- PASS: payouts empty list
+- PASS: payouts missing GET
+- PASS: payouts missing DELETE
+- PASS: payouts invalid id 0
+- PASS: payouts invalid id -1
+- PASS: payouts invalid id abc
+- PASS: payouts invalid id 2147483648
+- PASS: payouts invalid id 1%20OR%201=1
+- PASS: Member CREATE
+- PASS: Member GET
+- PASS: Member UPDATE
+- PASS: Member duplicate email
+- PASS: SQL-like member name treated as text
+- PASS: Member DELETE and GET after delete
+- PASS: Circle CREATE
+- PASS: Circle GET
+- PASS: Circle UPDATE
+- PASS: Circle empty members/cycles
+- PASS: Circle DELETE
+- PASS: Contribution CREATE
+- PASS: Contribution GET
+- PASS: Contribution duplicate
+- PASS: Contribution UPDATE
+- PASS: Contribution missing member
+- PASS: Contribution missing cycle
+- PASS: Contribution nonmember
+- PASS: Contribution DELETE
+- PASS: Circle membership and cycle reads
+- PASS: Bids empty ranking
+- PASS: Bid nonmember
+- PASS: Bid missing cycle
+- PASS: Bid CREATE
+- PASS: Bid duplicate
+- PASS: Ranking tie order and funding guard
+- PASS: Final contribution triggers atomic settlement
+- PASS: Closed cycle bid rejected
+- PASS: Paid contribution DELETE rejected
+- PASS: Paid contribution UPDATE rejected
+- PASS: Payout with shares DELETE rejected
+- PASS: Payout UPDATE timestamp
+- PASS: Payout recipient change rejected
+- PASS: Member financial dependency DELETE rejected
+- PASS: Previous winner bid rejected
+- PASS: Open cycle manual payout rejected
+- PASS: Concurrent final bids create one payout
+- PASS: Final unpaid member bid rejected
+- PASS: Final member settles without bid or shares and circle closes
+- PASS: Administrative Payout CREATE
+- PASS: Payout GET
+- PASS: Payout duplicate rejected
+- PASS: Payout DELETE without shares
+- PASS: members POST missing name
+- PASS: members POST missing email
+- PASS: members POST unknown field
+- PASS: members PUT missing name
+- PASS: members PUT missing email
+- PASS: members PUT unknown field
+- PASS: circles POST missing name
+- PASS: circles POST missing contribution_amount
+- PASS: circles POST missing start_date
+- PASS: circles POST unknown field
+- PASS: circles PUT missing name
+- PASS: circles PUT missing contribution_amount
+- PASS: circles PUT missing start_date
+- PASS: circles PUT unknown field
+- PASS: contributions POST missing member_id
+- PASS: contributions POST missing cycle_id
+- PASS: contributions POST unknown field
+- PASS: contributions PUT missing member_id
+- PASS: contributions PUT missing cycle_id
+- PASS: contributions PUT unknown field
+- PASS: payouts POST missing cycle_id
+- PASS: payouts POST missing member_id
+- PASS: payouts POST missing paid_at
+- PASS: payouts POST unknown field
+- PASS: payouts PUT missing cycle_id
+- PASS: payouts PUT missing member_id
+- PASS: payouts PUT missing paid_at
+- PASS: payouts PUT unknown field
+- PASS: Member bad text {"name":"","email":"a@b.com"}
+- PASS: Member bad text {"name":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+- PASS: Member bad text {"name":"a","email":"wrong"}
+- PASS: Member bad text {"name":"a","email":"xxxxxxxxxxxxxxxxxxxxxxxx
+- PASS: Circle bad amount 0
+- PASS: Circle bad amount -1
+- PASS: Circle bad amount 100000000
+- PASS: Circle bad amount 1.234
+- PASS: Circle bad amount 1e3
+- PASS: Circle bad date 2026-02-30
+- PASS: Circle bad date 2026-13-01
+- PASS: Circle bad date abc
+- PASS: Bid invalid discount 0
+- PASS: Bid invalid discount -1
+- PASS: Bid invalid discount 101
+- PASS: Bid invalid discount 1.234
+- PASS: Contribution string ID rejected
+- PASS: Payout URL/body mismatch
+- PASS: Malformed JSON
+- PASS: JSON array rejected
+- PASS: Unsupported Content Type
+- PASS: Body size limit
+- PASS: CORS allowed origin
+- PASS: CORS denied origin
+- PASS: CORS preflight
+- PASS: No server framework header
+- PASS: Unknown route
+- PASS: SQL injection URL blocked
+- PASS: Scan recovery closes ready cycle
+- PASS: Cent rounding preserves total discount
+- PASS: Concurrent duplicate bid accepts one only
+- PASS: Settlement failure rolls back bid payout shares and cycle change
+
+The collection examples are illustrative. This is functional testing, not a full penetration test.

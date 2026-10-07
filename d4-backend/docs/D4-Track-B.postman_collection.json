@@ -1,0 +1,1604 @@
+{
+  "info": {
+    "name": "D4 Track B - Simple",
+    "_postman_id": "5df0fa3f-c20f-49b4-b5d7-3c389f778804",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "D4 Track B REST API: 24 endpoints, organized by resource. All saved response examples are ILLUSTRATIVE, NOT EXECUTED test evidence. Run the backend separately. Send requests individually, not as an automatic collection run. Set test_* IDs from newly created records before PUT/DELETE. Financial writes need dedicated SQL fixtures because this API has no membership/cycle creation endpoints. Keep real execution evidence separately in the validation/security test log. No authentication required for D4. Allowed browser origin by default: http://localhost:5173. CORS does not authenticate callers. Rate limit defaults to 100 requests per IP per minute."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "member_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "circle_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "contribution_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "payout_cycle_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "test_member_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_circle_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_contribution_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_payout_cycle_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "write_member_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "write_cycle_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bid_cycle_id",
+      "value": "6",
+      "type": "string"
+    },
+    {
+      "key": "bid_member_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "List members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/members",
+            "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/members",
+                "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"member_id\": 11,\n    \"name\": \"Test Member\",\n    \"email\": \"test.member@example.com\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get members by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/members/{{member_id}}",
+            "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/members/{{member_id}}",
+                "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"member_id\": 11,\n  \"name\": \"Test Member\",\n  \"email\": \"test.member@example.com\"\n}"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/members/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Member not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/members",
+            "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email. Save returned primary key manually in test_member_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manual Test Member\",\n  \"email\": \"manual.test.20261007.01@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/members",
+                "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email. Save returned primary key manually in test_member_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test Member\",\n  \"email\": \"test.member@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"member_id\": 11,\n  \"name\": \"Test Member\",\n  \"email\": \"test.member@example.com\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/members",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid name\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/members/{{test_member_id}}",
+            "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Test Member\",\n  \"email\": \"updated.test.member@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/members/{{test_member_id}}",
+                "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Test Member\",\n  \"email\": \"updated.test.member@example.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"member_id\": 11,\n  \"name\": \"Updated Test Member\",\n  \"email\": \"updated.test.member@example.com\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/members/1",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid name\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete member",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/members/{{test_member_id}}",
+            "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "204 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/members/{{test_member_id}}",
+                "description": "name: nonempty string <=100 characters; email: valid address <=150 characters. Unique email. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "404 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/members/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Member not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Circles",
+      "item": [
+        {
+          "name": "List circles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/circles",
+            "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles",
+                "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"circle_id\": 2,\n    \"name\": \"Test Circle\",\n    \"contribution_amount\": \"1000.00\",\n    \"start_date\": \"2026-10-01\",\n    \"member_count\": 0,\n    \"paid_member_count\": 0,\n    \"remaining_member_count\": 0,\n    \"status\": \"pending\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get circles by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/circles/{{circle_id}}",
+            "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles/{{circle_id}}",
+                "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"circle_id\": 2,\n  \"name\": \"Test Circle\",\n  \"contribution_amount\": \"1000.00\",\n  \"start_date\": \"2026-10-01\",\n  \"member_count\": 0,\n  \"paid_member_count\": 0,\n  \"remaining_member_count\": 0,\n  \"status\": \"pending\"\n}"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Circle not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create circle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/circles",
+            "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields. Save returned primary key manually in test_circle_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Circle\",\n  \"contribution_amount\": 1000,\n  \"start_date\": \"2026-10-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/circles",
+                "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields. Save returned primary key manually in test_circle_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Test Circle\",\n  \"contribution_amount\": 1000,\n  \"start_date\": \"2026-10-01\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"circle_id\": 2,\n  \"name\": \"Test Circle\",\n  \"contribution_amount\": \"1000.00\",\n  \"start_date\": \"2026-10-01\",\n  \"member_count\": 0,\n  \"paid_member_count\": 0,\n  \"remaining_member_count\": 0,\n  \"status\": \"pending\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/circles",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid name\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update circle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/circles/{{test_circle_id}}",
+            "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Test Circle\",\n  \"contribution_amount\": 1200,\n  \"start_date\": \"2026-10-02\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/circles/{{test_circle_id}}",
+                "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Test Circle\",\n  \"contribution_amount\": 1200,\n  \"start_date\": \"2026-10-02\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"circle_id\": 2,\n  \"name\": \"Updated Test Circle\",\n  \"contribution_amount\": 1200,\n  \"start_date\": \"2026-10-02\",\n  \"member_count\": 0,\n  \"paid_member_count\": 0,\n  \"remaining_member_count\": 0,\n  \"status\": \"pending\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/circles/1",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid name\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete circle",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/circles/{{test_circle_id}}",
+            "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "204 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/circles/{{test_circle_id}}",
+                "description": "name: nonempty string <=100 characters; contribution_amount: positive decimal <=99999999.99, <=2 decimal places; start_date: real YYYY-MM-DD date. Progress/status are calculated, read-only fields. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "404 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/circles/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Circle not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get circle members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/circles/{{circle_id}}/members",
+            "description": "Circle ID: positive integer. Returns an array; existing empty circle returns []; missing parent returns 404.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles/{{circle_id}}/members",
+                "description": "Circle ID: positive integer. Returns an array; existing empty circle returns []; missing parent returns 404.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"member_id\": 1,\n    \"name\": \"Ahmed Ali\",\n    \"email\": \"ahmed@example.com\",\n    \"joined_on\": \"2026-01-01\"\n  }\n]"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles/2147483647/members",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Circle not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get circle cycles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/circles/{{circle_id}}/cycles",
+            "description": "Circle ID: positive integer. Returns cycles ordered by seq_no; missing parent returns 404.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles/{{circle_id}}/cycles",
+                "description": "Circle ID: positive integer. Returns cycles ordered by seq_no; missing parent returns 404.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"cycle_id\": 6,\n    \"seq_no\": 6,\n    \"status\": \"open\"\n  }\n]"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/circles/2147483647/cycles",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Circle not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Contributions",
+      "item": [
+        {
+          "name": "List contributions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/contributions",
+            "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/contributions",
+                "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"contribution_id\": 61,\n    \"member_id\": 1,\n    \"cycle_id\": 7\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get contributions by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/contributions/{{contribution_id}}",
+            "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/contributions/{{contribution_id}}",
+                "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"contribution_id\": 61,\n  \"member_id\": 1,\n  \"cycle_id\": 7\n}"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/contributions/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Contribution not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create contribution",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/contributions",
+            "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle. Save returned primary key manually in test_contribution_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"member_id\": {{write_member_id}},\n  \"cycle_id\": {{write_cycle_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/contributions",
+                "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle. Save returned primary key manually in test_contribution_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"member_id\": {{write_member_id}},\n  \"cycle_id\": {{write_cycle_id}}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"contribution_id\": 61,\n  \"member_id\": 1,\n  \"cycle_id\": 7\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/contributions",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid member_id\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update contribution",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/contributions/{{test_contribution_id}}",
+            "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"member_id\": {{write_member_id}},\n  \"cycle_id\": {{write_cycle_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/contributions/{{test_contribution_id}}",
+                "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"member_id\": {{write_member_id}},\n  \"cycle_id\": {{write_cycle_id}}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"contribution_id\": 61,\n  \"member_id\": 1,\n  \"cycle_id\": 7\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/contributions/1",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid member_id\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete contribution",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/contributions/{{test_contribution_id}}",
+            "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "204 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/contributions/{{test_contribution_id}}",
+                "description": "member_id and cycle_id: positive integer JSON numbers. No amount field. Member must belong to the circle; no duplicate contribution; cannot edit/delete after payout. Set write_* values for an unsettled dedicated test cycle. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "404 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/contributions/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Contribution not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Payouts",
+      "item": [
+        {
+          "name": "List payouts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/payouts",
+            "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/payouts",
+                "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"cycle_id\": 7,\n    \"member_id\": 1,\n    \"paid_at\": \"2026-10-07 12:00:00\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get payouts by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/payouts/{{payout_cycle_id}}",
+            "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/payouts/{{payout_cycle_id}}",
+                "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"cycle_id\": 7,\n  \"member_id\": 1,\n  \"paid_at\": \"2026-10-07 12:00:00\"\n}"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/payouts/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Payout not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create payout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/payouts",
+            "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged. Save returned primary key manually in test_payout_cycle_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cycle_id\": {{write_cycle_id}},\n  \"member_id\": {{write_member_id}},\n  \"paid_at\": \"2026-10-07 12:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/payouts",
+                "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged. Save returned primary key manually in test_payout_cycle_id. Financial write IDs are deliberately blank until fixture setup.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cycle_id\": {{write_cycle_id}},\n  \"member_id\": {{write_member_id}},\n  \"paid_at\": \"2026-10-07 12:00:00\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"cycle_id\": 7,\n  \"member_id\": 1,\n  \"paid_at\": \"2026-10-07 12:00:00\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/payouts",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid member_id\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update payout",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/payouts/{{test_payout_cycle_id}}",
+            "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cycle_id\": {{test_payout_cycle_id}},\n  \"member_id\": {{write_member_id}},\n  \"paid_at\": \"2026-10-07 13:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/payouts/{{test_payout_cycle_id}}",
+                "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged. Full replacement: send all writable fields. Use only a disposable created/fixture record.\nHTTP codes: 200 update; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"cycle_id\": {{test_payout_cycle_id}},\n  \"member_id\": {{write_member_id}},\n  \"paid_at\": \"2026-10-07 13:00:00\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"cycle_id\": 7,\n  \"member_id\": 1,\n  \"paid_at\": \"2026-10-07 13:00:00\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/payouts/1",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid member_id\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete payout",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{base_url}}/payouts/{{test_payout_cycle_id}}",
+            "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "204 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/payouts/{{test_payout_cycle_id}}",
+                "description": "cycle_id and member_id: positive integer JSON numbers; paid_at: valid UTC YYYY-MM-DD HH:mm:ss. Item ID is cycle_id. Administrative creation requires a CLOSED fully funded cycle with no payout, and the correct highest eligible bidder or final recipient. Open cycles settle automatically. PUT cycle_id must equal URL ID. Existing discount shares block deletion and recipient changes. Use a separate fixture; leave seeded payouts unchanged. Delete only the disposable test record. Verify it with GET afterward (404).\nHTTP codes: 204 deleted, empty body; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            },
+            {
+              "name": "404 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": "{{base_url}}/payouts/2147483647",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Payout not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bids",
+      "item": [
+        {
+          "name": "Submit bid",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/cycles/{{bid_cycle_id}}/bids",
+            "description": "Requires an open cycle and a circle member who has not received a payout. discount_rate: >0 and <=100, <=2 decimals. Duplicate bids return 409. Highest discount wins; lower bid_id breaks ties. Multiple remaining members: settlement requires all eligible bids and full contributions. Final remaining member receives full pot automatically after funding without bidding. Do not repeatedly submit this POST expecting 201.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"member_id\": {{bid_member_id}},\n  \"discount_rate\": 20\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "name": "201 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/cycles/{{bid_cycle_id}}/bids",
+                "description": "Requires an open cycle and a circle member who has not received a payout. discount_rate: >0 and <=100, <=2 decimals. Duplicate bids return 409. Highest discount wins; lower bid_id breaks ties. Multiple remaining members: settlement requires all eligible bids and full contributions. Final remaining member receives full pot automatically after funding without bidding. Do not repeatedly submit this POST expecting 201.\nHTTP codes: 201 create; 400 invalid input/ID; 404 missing resource/reference; 409 duplicate, business-rule or dependency conflict; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing.",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"member_id\": {{bid_member_id}},\n  \"discount_rate\": 20\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"bid_id\": 26,\n  \"member_id\": 1,\n  \"cycle_id\": 6,\n  \"discount_rate\": \"20.00\",\n  \"cycle_status\": \"open\"\n}"
+            },
+            {
+              "name": "400 - Failure (illustrative, not executed)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": "{{base_url}}/cycles/6/bids",
+                "description": "",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"member_id\": 1,\n  \"discount_rate\": 101\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"errors\": [\n    \"Missing or invalid discount_rate\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get bid ranking",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/cycles/{{bid_cycle_id}}/bids/ranking",
+            "description": "Returns an array ordered by discount_rate DESC and bid_id ASC, with sequential ranks. Existing cycle without bids returns []; missing cycle returns 404.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+          },
+          "response": [
+            {
+              "name": "200 - Success (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/cycles/{{bid_cycle_id}}/bids/ranking",
+                "description": "Returns an array ordered by discount_rate DESC and bid_id ASC, with sequential ranks. Existing cycle without bids returns []; missing cycle returns 404.\nHTTP codes: 200 read; 400 invalid ID; 404 missing resource; 429 rate limit; 500 unexpected server failure (generic error). Requests with a disallowed Origin return 403. JSON writes may return 413 for body over 16KB or 415 for wrong Content-Type.\nExamples below are illustrative only; replace/add actual response examples after testing."
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n  {\n    \"rank\": 1,\n    \"bid_id\": 26,\n    \"member_id\": 1,\n    \"cycle_id\": 6,\n    \"discount_rate\": \"20.00\",\n    \"name\": \"Ahmed Ali\"\n  }\n]"
+            },
+            {
+              "name": "404 - Resource not found (illustrative, not executed)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": "{{base_url}}/cycles/2147483647/bids/ranking",
+                "description": ""
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"error\": \"Cycle not found\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
