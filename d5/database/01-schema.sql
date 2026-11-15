@@ -3,7 +3,11 @@
 CREATE TABLE Member (
     member_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL
+    email VARCHAR(150) UNIQUE NOT NULL,
+    -- D9: bcrypt hash only (salted, cost 12); plain-text passwords are never stored.
+    password_hash CHAR(60) NOT NULL,
+    -- D9 RBAC: role is set by the server, never taken from the request.
+    role VARCHAR(10) NOT NULL DEFAULT 'member' CHECK (role IN ('organizer', 'member'))
 );
 
 CREATE TABLE Circle (
@@ -11,7 +15,9 @@ CREATE TABLE Circle (
     name VARCHAR(100) NOT NULL,
     contribution_amount NUMERIC(10,2) NOT NULL
         CHECK (contribution_amount > 0),
-    start_date DATE NOT NULL
+    start_date DATE NOT NULL,
+    -- Set by the organizer: completed (closed) cycles needed to finish the circle.
+    total_cycles INT NOT NULL CHECK (total_cycles > 0)
 );
 
 CREATE TABLE Membership (

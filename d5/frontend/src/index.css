@@ -575,6 +575,24 @@ fieldset button {
   background: white;
   border-radius: 12px;
 }
+/* D9: signed-in user and login form */
+.session {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.user-name {
+  font-size: 13px;
+  color: var(--muted);
+}
+.login-panel {
+  max-width: 420px;
+  margin: 48px auto 0;
+}
+.login-panel fieldset {
+  grid-template-columns: 1fr;
+}
+
 @media (max-width: 1100px) {
   .topbar-inner {
     padding: 20px 24px;

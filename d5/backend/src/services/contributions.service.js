@@ -23,7 +23,9 @@ async function write(id, body) {
 
     for (const cid of ids) locked.set(cid,await cycles.lock(db,cid));
     const cycle = locked.get(body.cycle_id);
-    if (cycle.status === 'expired') throw new ApiError(409,'This cycle expired without bids; contributions are not accepted');
+    if (cycle.status === 'expired') throw new ApiError(409,'This cycle expired without bids; record contributions in the next cycle the organizer creates');
+    // Pending cycles take no money yet, so a carry-over can never double-charge a member.
+    if (cycle.status === 'pending') throw new ApiError(409,'This cycle has not been opened by the organizer yet');
 
     if (old) {
       const current = await repo.get(id,db,true);

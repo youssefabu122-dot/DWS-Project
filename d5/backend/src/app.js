@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const {rateLimit} = require('express-rate-limit');
 const {ApiError,errorHandler} = require('./middleware/errors');
+const {authenticate} = require('./middleware/auth');
 const app = express();
 
 app.disable('x-powered-by');
@@ -26,11 +27,14 @@ if (origins.includes('*')) throw new Error('CORS_ORIGINS must list explicit orig
 app.use(cors({origin(origin,callback) {
   if (!origin || origins.includes(origin)) return callback(null,true);
   callback(new ApiError(403,'Origin is not allowed'));
-}, methods:['GET','POST','PUT','DELETE','OPTIONS'],allowedHeaders:['Content-Type'],exposedHeaders:['Location']}));
+}, methods:['GET','POST','PUT','DELETE','OPTIONS'],allowedHeaders:['Content-Type','Authorization'],exposedHeaders:['Location']}));
 
 
 app.use(rateLimit({windowMs:Number(process.env.RATE_LIMIT_WINDOW_MS || 60000),limit:Number(process.env.RATE_LIMIT_MAX || 100),standardHeaders:'draft-8',legacyHeaders:false,message:{error:'Too many requests; try again later'}}));
 app.use(express.json({limit:'16kb'}));
+// D9: /login is the only public route. Every route below requires a valid JWT.
+app.use('/login',require('./routes/auth.routes'));
+app.use(authenticate);
 app.use('/members',require('./routes/members.routes'));
 app.use('/circles',require('./routes/circles.routes'));
 

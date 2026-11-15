@@ -1,5 +1,5 @@
 const pool = require('./connection');
-const repository = require('./crud.repository')('Circle', 'circle_id', ["name", "contribution_amount", "start_date"], true);
+const repository = require('./crud.repository')('Circle', 'circle_id', ["name", "contribution_amount", "start_date", "total_cycles"], true);
 
 
 async function getMembersByCircle(circleId) {
@@ -38,7 +38,8 @@ async function getCyclesByCircle(circleId) {
 
 // Derived progress keeps the original Circle schema unchanged.
 async function progress(id, db = pool) {
-  const [rows] = await db.execute(`SELECT c.circle_id, c.name, c.contribution_amount, c.start_date,
+  const [rows] = await db.execute(`SELECT c.circle_id, c.name, c.contribution_amount, c.start_date, c.total_cycles,
+    (SELECT COUNT(*) FROM Cycle cy WHERE cy.circle_id = c.circle_id AND cy.status = 'closed') AS completed_cycle_count,
     (SELECT COUNT(*) FROM Membership ms WHERE ms.circle_id = c.circle_id) AS member_count,
     (SELECT COUNT(*) FROM Membership ms WHERE ms.circle_id = c.circle_id AND EXISTS (
       SELECT 1 FROM Payout p JOIN Cycle cy ON cy.cycle_id = p.cycle_id
@@ -50,9 +51,12 @@ async function progress(id, db = pool) {
   return rows.map(row => {
     const memberCount = Number(row.member_count);
     const paidCount = Number(row.paid_member_count);
+    // Only closed cycles count toward total_cycles; expired cycles do not.
+    const completed = Number(row.completed_cycle_count);
     return {...row, member_count: memberCount, paid_member_count: paidCount,
-      remaining_member_count: memberCount - paidCount,
-      status: memberCount === 0 ? 'pending' : paidCount === memberCount ? 'closed' : 'active'};
+      remaining_member_count: memberCount - paidCount, completed_cycle_count: completed,
+      status: memberCount === 0 ? 'pending'
+        : paidCount === memberCount || completed >= row.total_cycles ? 'closed' : 'active'};
   });
 }
 module.exports = {...repository, getMembersByCircle, getCyclesByCircle, progress};

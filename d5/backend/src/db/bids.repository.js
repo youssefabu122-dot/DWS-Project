@@ -5,6 +5,8 @@ const deadline = require('./bid-deadline.repository');
 
 const {ApiError} = require('../middleware/errors');
 
+// Highest discount first. Ties go to the earliest submitted bid: bids are inserted
+// one at a time under the circle lock, so a lower bid_id means an earlier submission.
 async function ranking(db, id) {
 
   const [rows] = await db.execute(`SELECT b.bid_id, b.member_id, b.cycle_id, b.discount_rate, m.name
@@ -37,7 +39,8 @@ async function closeIfReady(db, cycle) {
   if (members.length > 1) {
     if (timing.expired) {
       if (!eligibleBids.length) {
-        // No winner: stop this cycle without creating a payout.
+        // No valid bid by the deadline: mark the cycle expired. The organizer
+        // creates the next cycle manually (POST /circles/:id/cycles).
         await db.execute('UPDATE Cycle SET status = ? WHERE cycle_id = ?', ['expired', cycle.cycle_id]);
         return false;
       }

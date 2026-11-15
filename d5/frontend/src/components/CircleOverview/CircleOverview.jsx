@@ -51,7 +51,8 @@ export default function CircleOverview({ circle }) {
             <span>members</span>
           </p>
           <p className="stat-note">
-            Across all cycles · Current circle progress
+            Cycles completed: {circle.completed_cycle_count} of{" "}
+            {circle.total_cycles} · Expired cycles not counted
           </p>
           <progress
             aria-label="Members paid so far"

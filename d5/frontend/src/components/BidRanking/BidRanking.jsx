@@ -77,8 +77,8 @@ export default function BidRanking({
       <div className="panel-foot foot-note">
         <Icon name="info" />
         <span>
-          Highest discount wins; equal rates use the lowest bid ID. The server
-          confirms settlement.
+          Highest discount wins; for equal rates, the earliest submitted bid
+          wins. The server confirms settlement.
         </span>
       </div>
       {error ? (

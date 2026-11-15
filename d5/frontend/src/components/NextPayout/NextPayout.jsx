@@ -25,7 +25,7 @@ export default function NextPayout({ details, onExpired }) {
     no_members: "No members yet",
     awaiting_funding: "Leading bid — awaiting contributions",
     awaiting_settlement: "Settlement pending",
-    expired_no_bids: "At least one eligible member must submit a bid",
+    expired_no_bids: "Cycle expired — awaiting organizer",
   };
   const names = {
     expired_no_bids: "No bids submitted",
@@ -40,7 +40,7 @@ export default function NextPayout({ details, onExpired }) {
     awaiting_settlement:
       "Bidding is closed and the pot is fully funded. The server is completing settlement.",
     expired_no_bids:
-      "The deadline passed without eligible bids. At least one eligible member must submit a bid before closing. No payout was created; this cycle is expired.",
+      "The deadline passed without a valid bid, so this cycle expired with no payout. The organizer must create the next cycle; recorded contributions carry over to it, so members are not charged again.",
     confirmed: "The server has recorded the payout for this cycle.",
     closed_without_payout:
       "This cycle is not open. No payout is recorded for it.",

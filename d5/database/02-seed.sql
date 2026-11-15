@@ -1,21 +1,25 @@
 -- Seed file for inserting sample data
 
 -- Insert one circle
-INSERT INTO Circle (name, contribution_amount, start_date)
-VALUES ('Savings Circle', 1000.00, '2026-01-01');
+-- Ten members, so the organizer set ten cycles (one payout per member).
+INSERT INTO Circle (name, contribution_amount, start_date, total_cycles)
+VALUES ('Savings Circle', 1000.00, '2026-01-01', 10);
 
--- Insert ten members
-INSERT INTO Member (name, email) VALUES
-('Ahmed Ali', 'ahmed@example.com'),
-('Mohamed Hassan', 'mohamed@example.com'),
-('Omar Khaled', 'omar@example.com'),
-('Youssef Adel', 'youssef@example.com'),
-('Ali Samir', 'ali@example.com'),
-('Mahmoud Tarek', 'mahmoud@example.com'),
-('Hassan Ibrahim', 'hassan@example.com'),
-('Karim Mostafa', 'karim@example.com'),
-('Amr Nabil', 'amr@example.com'),
-('Abdo Ahmed', 'Abdo@example.com');
+-- Ten members plus one organizer account (member 11, not part of any circle).
+-- D9: only bcrypt hashes are stored (cost 12, unique salt per account).
+-- Demo password for every seed account: RoscaDemo#2026 (local testing only).
+INSERT INTO Member (name, email, password_hash, role) VALUES
+('Ahmed Ali', 'ahmed@example.com', '$2b$12$yV/uUlAHDlyY7VP0coJTGeAe3lZ3J/jDq6FDVcXT6gEIkLyJW6NI6', 'member'),
+('Mohamed Hassan', 'mohamed@example.com', '$2b$12$lmF.wux02B0sVYfIws.ereT4EYXls0mNU1s55M5wP.Amff6Jw3ani', 'member'),
+('Omar Khaled', 'omar@example.com', '$2b$12$pnwh4I0chn5y8WAjlhsV2.gwVt25IqogoabvGDYNwmeMZf6EX72Ty', 'member'),
+('Youssef Adel', 'youssef@example.com', '$2b$12$taLCCsnDUV7Zsm3y4e/fZ..L7Ccf0AKPT.O8o5tz5eArKFYQCA3Z.', 'member'),
+('Ali Samir', 'ali@example.com', '$2b$12$UrQdLAxGAj9D8JuLj4/SUOzG1hWR0okuDYnaSfKZmEluxE6xwHNuW', 'member'),
+('Mahmoud Tarek', 'mahmoud@example.com', '$2b$12$OPEPA5PJgd96zQU.3ZtcROf.UiHweop2hwxb6g4uX5F5kgCJcRNc.', 'member'),
+('Hassan Ibrahim', 'hassan@example.com', '$2b$12$gg.vggUvSnQViONSg6zPN.qsy2tNkY1OV1yPm5v1iAEVAfnpV76za', 'member'),
+('Karim Mostafa', 'karim@example.com', '$2b$12$m6dfgqTifmwAKkrzA7T7PutOoBdcaEkEIWzbqlOl8hPPBEKNH4g1a', 'member'),
+('Amr Nabil', 'amr@example.com', '$2b$12$5A0CPbzf05/HtyVFU13JI.7nGmnQCXd6xiTtOy.ocFysMBVwzbTDK', 'member'),
+('Abdo Ahmed', 'Abdo@example.com', '$2b$12$pI8T.CeMWpEYiHM5NK6a5.cTQYO6BsyjWECDfArmLjGQpQBg29EWq', 'member'),
+('Circle Organizer', 'organizer@example.com', '$2b$12$u1WzdRK0tgMRb4L883arb.UVYbJiJ6DGyqUpzM3znSKCJ06vGtu9O', 'organizer');
 
 -- Add all members to the circle
 INSERT INTO Membership (member_id, circle_id, joined_on) VALUES
@@ -30,46 +34,32 @@ INSERT INTO Membership (member_id, circle_id, joined_on) VALUES
 (9, 1, '2026-01-01'),
 (10, 1, '2026-01-01');
 
--- Six cycles
-INSERT INTO Cycle (circle_id, seq_no, status) VALUES
-(1, 1, 'closed'),
-(1, 2, 'closed'),
-(1, 3, 'closed'),
-(1, 4, 'closed'),
-(1, 5, 'closed'),
-(1, 6, 'open');
+-- Six cycles (Track B rules: highest discount > 0% wins; ties go to the
+-- earliest submitted bid; members who were already paid cannot bid again).
+-- 1-3 closed with payouts, 4 expired with no bids, 5 created by the
+-- organizer after the expiry and open for bidding, 6 created in advance and pending.
+-- Cycle 4 does not count toward the 10 required cycles, so the organizer
+-- will create five more (seq 7-11) to complete the circle.
+INSERT INTO Cycle (circle_id, seq_no, status, bid_closes_at) VALUES
+(1, 1, 'closed',  '2026-01-31 12:00:00'),
+(1, 2, 'closed',  '2026-02-28 12:00:00'),
+(1, 3, 'closed',  '2026-03-31 12:00:00'),
+(1, 4, 'expired', '2026-04-30 12:00:00'),
+(1, 5, 'open',    NULL),  -- deadline is set when the backend starts
+(1, 6, 'pending', NULL);
 
--- Insert contributions for Cycle 1
+-- Contributions: cycles 1-3 fully funded by all ten members.
 INSERT INTO Contribution (member_id, cycle_id) VALUES
-(1,1),(2,1),(3,1),(4,1),(5,1),
-(6,1),(7,1),(8,1),(9,1),(10,1);
+(1,1),(2,1),(3,1),(4,1),(5,1),(6,1),(7,1),(8,1),(9,1),(10,1),
+(1,2),(2,2),(3,2),(4,2),(5,2),(6,2),(7,2),(8,2),(9,2),(10,2),
+(1,3),(2,3),(3,3),(4,3),(5,3),(6,3),(7,3),(8,3),(9,3),(10,3);
 
--- Insert contributions for Cycle 2
+-- Cycle 4 expired, so its contributions were carried over to cycle 5.
+-- Members 9 and 10 have not paid yet.
 INSERT INTO Contribution (member_id, cycle_id) VALUES
-(1,2),(2,2),(3,2),(4,2),(5,2),
-(6,2),(7,2),(8,2),(9,2),(10,2);
+(1,5),(2,5),(3,5),(4,5),(5,5),(6,5),(7,5),(8,5);
 
--- Insert contributions for Cycle 3
-INSERT INTO Contribution (member_id, cycle_id) VALUES
-(1,3),(2,3),(3,3),(4,3),(5,3),
-(6,3),(7,3),(8,3),(9,3),(10,3);
-
--- Insert contributions for Cycle 4
-INSERT INTO Contribution (member_id, cycle_id) VALUES
-(1,4),(2,4),(3,4),(4,4),(5,4),
-(6,4),(7,4),(8,4),(9,4),(10,4);
-
--- Insert contributions for Cycle 5
-INSERT INTO Contribution (member_id, cycle_id) VALUES
-(1,5),(2,5),(3,5),(4,5),(5,5),
-(6,5),(7,5),(8,5),(9,5),(10,5);
-
--- Insert contributions for Cycle 6
-INSERT INTO Contribution (member_id, cycle_id) VALUES
-(1,6),(2,6),(3,6),(4,6),(5,6),
-(6,6),(7,6),(8,6),(9,6),(10,6);
-
--- Insert bids for Cycle 1
+-- Cycle 1: Mohamed Hassan (member 2) wins with 10%.
 INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
 (1, 1, 5.00),
 (2, 1, 10.00),
@@ -77,49 +67,40 @@ INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
 (4, 1, 3.00),
 (5, 1, 2.00);
 
--- Insert bids for Cycle 2
+-- Cycle 2: members 4 and 5 tie at 9%; member 4 bid first and wins.
 INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
-(2, 2, 4.00),
 (3, 2, 6.00),
 (4, 2, 9.00),
-(5, 2, 5.00),
+(5, 2, 9.00),
 (6, 2, 3.00);
 
--- Insert bids for Cycle 3
+-- Cycle 3: Ali Samir (member 5) wins with 8%.
 INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
-(3, 3, 4.00),
-(4, 3, 6.00),
 (5, 3, 8.00),
 (6, 3, 5.00),
-(7, 3, 2.00);
+(7, 3, 2.00),
+(3, 3, 4.00);
 
--- Insert bids for Cycle 4
-INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
-(4, 4, 3.00),
-(5, 4, 5.00),
-(6, 4, 7.00),
-(7, 4, 9.00),
-(8, 4, 4.00);
+-- Cycle 4: no bids before the deadline -> expired, no payout.
 
--- Insert bids for Cycle 5
+-- Cycle 5 (open): eligible members are 1, 3, 6, 7, 8, 9, 10.
+-- Members 7 and 8 tie at 6%; member 7 bid first and currently leads.
 INSERT INTO Bid (member_id, cycle_id, discount_rate) VALUES
-(5, 5, 2.00),
-(6, 5, 4.00),
 (7, 5, 6.00),
-(8, 5, 8.00),
-(9, 5, 10.00);
+(1, 5, 4.50),
+(8, 5, 6.00);
 
--- Insert one payout for each closed cycle
+-- Payouts for the closed cycles.
 INSERT INTO Payout (cycle_id, member_id, paid_at) VALUES
-(1, 2, '2026-01-31 12:00:00'),
-(2, 4, '2026-02-28 12:00:00'),
-(3, 5, '2026-03-31 12:00:00'),
-(4, 7, '2026-04-30 12:00:00'),
-(5, 9, '2026-05-31 12:00:00');
+(1, 2, '2026-01-31 12:05:00'),
+(2, 4, '2026-02-28 12:05:00'),
+(3, 5, '2026-03-31 12:05:00');
 
--- Insert discount shares for Cycle 1 payout
+-- Discount shares: pot 10,000.00; the discount is split equally among the
+-- other nine members, with leftover cents going to the lowest member IDs.
+-- Cycle 1: 10% = 1,000.00
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
-(1, 1, 111.11),
+(1, 1, 111.12),
 (1, 3, 111.11),
 (1, 4, 111.11),
 (1, 5, 111.11),
@@ -127,9 +108,9 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (1, 7, 111.11),
 (1, 8, 111.11),
 (1, 9, 111.11),
-(1, 10, 111.12);
+(1, 10, 111.11);
 
--- Insert discount shares for Cycle 2 payout
+-- Cycle 2: 9% = 900.00
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (2, 1, 100.00),
 (2, 2, 100.00),
@@ -141,7 +122,7 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (2, 9, 100.00),
 (2, 10, 100.00);
 
--- Insert discount shares for Cycle 3 payout
+-- Cycle 3: 8% = 800.00
 INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (3, 1, 88.89),
 (3, 2, 88.89),
@@ -152,29 +133,3 @@ INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
 (3, 8, 88.89),
 (3, 9, 88.89),
 (3, 10, 88.88);
-
--- Insert discount shares for Cycle 4 payout
-INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
-(4, 1, 100.00),
-(4, 2, 100.00),
-(4, 3, 100.00),
-(4, 4, 100.00),
-(4, 5, 100.00),
-(4, 6, 100.00),
-(4, 8, 100.00),
-(4, 9, 100.00),
-(4, 10, 100.00);
-
--- Insert discount shares for Cycle 5 payout
-INSERT INTO DiscountShare (payout_cycle_id, member_id, amount) VALUES
-(5, 1, 111.11),
-(5, 2, 111.11),
-(5, 3, 111.11),
-(5, 4, 111.11),
-(5, 5, 111.11),
-(5, 6, 111.11),
-(5, 7, 111.11),
-(5, 8, 111.11),
-(5, 10, 111.12);
--- Future rounds: no contributions or bids recorded yet.
-INSERT INTO Cycle (circle_id, seq_no, status) VALUES (1,7,'pending'),(1,8,'pending');

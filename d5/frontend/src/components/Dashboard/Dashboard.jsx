@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { client } from "../../api.js";
 
 import Header from "../Header/Header.jsx";
 import Panel from "../Panel/Panel.jsx";
@@ -9,51 +9,7 @@ import NextPayout from "../NextPayout/NextPayout.jsx";
 import BidRanking from "../BidRanking/BidRanking.jsx";
 import Icon from "../Icon/Icon.jsx";
 
-const client = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL || "http://localhost:3000").replace(
-    /\/$/,
-    "",
-  ),
-  timeout: 10000,
-});
-let retryAt = 0;
-
-client.interceptors.request.use((config) => {
-  if (Date.now() < retryAt) {
-    throw new Error(
-      "Too many requests. Please wait a minute before trying again.",
-    );
-  }
-  return config;
-});
-
-client.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (axios.isCancel(error)) return Promise.reject(error);
-    if (error.response?.status === 429) {
-      const retry = error.response.headers?.["retry-after"];
-      const delay =
-        retry && Number.isFinite(Number(retry))
-          ? Number(retry) * 1000
-          : Date.parse(retry) - Date.now();
-      retryAt =
-        Date.now() + Math.max(60000, Number.isFinite(delay) ? delay : 0);
-    }
-    const data = error.response?.data;
-    const message =
-      data?.errors?.join(" ") ||
-      data?.error ||
-      (error.response
-        ? `Request failed (${error.response.status}).`
-        : error.config
-          ? "Cannot reach the API. Check the backend address and CORS_ORIGINS."
-          : error.message);
-    return Promise.reject(new Error(message));
-  },
-);
-
-export default function Dashboard() {
+export default function Dashboard({ user, onLogout }) {
   const [circles, setCircles] = useState([]);
   const [circleId, setCircleId] = useState("");
   const [cycleId, setCycleId] = useState("");
@@ -201,6 +157,8 @@ export default function Dashboard() {
       <Header
         connected={Boolean(updated)}
         paused={Boolean(error || listError)}
+        user={user}
+        onLogout={onLogout}
       />
       <main className="dashboard">
         <div className="toolbar">
@@ -314,7 +272,7 @@ export default function Dashboard() {
         {!loadingList && !listError && !circles.length && (
           <Panel title="Your circles">
             <p className="empty-state">
-              No circles found. Add one through the existing API to get started.
+              {user.role === "organizer" ? "No circles found. Add one through the API to get started." : "You are not a member of any circle yet."}
             </p>
           </Panel>
         )}
@@ -343,7 +301,14 @@ export default function Dashboard() {
                     biddingOpen={biddingOpen}
                     bids={data.bids}
                     cycle={data.cycle}
-                    members={data.members}
+                    members={
+                      // D9: a member can only bid as themselves.
+                      user.role === "member"
+                        ? data.members.filter(
+                            (m) => m.member_id === user.member_id,
+                          )
+                        : data.members
+                    }
                     error={error}
                     onSubmitted={() => refreshRef.current?.()}
                   />

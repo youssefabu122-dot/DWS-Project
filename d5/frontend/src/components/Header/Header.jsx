@@ -1,6 +1,11 @@
 import Icon from "../Icon/Icon.jsx";
 
-export default function Header({ connected = false, paused = false }) {
+export default function Header({
+  connected = false,
+  paused = false,
+  user,
+  onLogout,
+}) {
   return (
     <header className="topbar">
       <div className="topbar-inner">
@@ -12,17 +17,27 @@ export default function Header({ connected = false, paused = false }) {
           <span className="brand-divider" />
           <h1>Dashboard</h1>
         </div>
-        <span
-          className={`connection ${connected && !paused ? "connected" : ""}`}
-          role="status"
-        >
-          <span className="connection-dot" />
-          {paused
-            ? "Updates paused"
-            : connected
-              ? "Live updates · 15s"
-              : "Connecting"}
-        </span>
+        {user && (
+          <div className="session">
+            <span
+              className={`connection ${connected && !paused ? "connected" : ""}`}
+              role="status"
+            >
+              <span className="connection-dot" />
+              {paused
+                ? "Updates paused"
+                : connected
+                  ? "Live updates · 15s"
+                  : "Connecting"}
+            </span>
+            <span className="user-name">
+              {user.name} · {user.role}
+            </span>
+            <button className="button-outline" onClick={onLogout}>
+              Log out
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );

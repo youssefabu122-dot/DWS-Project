@@ -61,7 +61,7 @@ BEGIN
     IF v_seq < 1 OR EXISTS (
         SELECT 1 FROM Cycle AS c LEFT JOIN Payout AS p ON p.cycle_id = c.cycle_id
         WHERE c.circle_id = p_circle AND (
-            (c.seq_no < v_seq AND (c.status <> 'closed' OR p.cycle_id IS NULL))
+            (c.seq_no < v_seq AND c.status <> 'expired' AND (c.status <> 'closed' OR p.cycle_id IS NULL))
             OR (c.seq_no > v_seq AND (c.status = 'closed' OR p.cycle_id IS NOT NULL))
         )
     ) THEN
@@ -132,7 +132,7 @@ BEGIN
         IF v_deadline IS NULL OR v_now >= v_deadline THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'D8_BIDDING_ENDED';
         END IF;
-        IF p_rate IS NULL OR p_rate < 0 OR p_rate > 100 OR NOT EXISTS (
+        IF p_rate IS NULL OR p_rate <= 0 OR p_rate > 100 OR NOT EXISTS (
             SELECT 1 FROM Circle WHERE circle_id = v_circle
               AND discount_unit = 'PERCENT' AND discount_share_rule = 'EQUAL_NON_WINNERS'
         ) THEN
@@ -175,7 +175,7 @@ BEGIN
 
     SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     START TRANSACTION;
-    BEGIN
+    close_body: BEGIN
         DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             ROLLBACK AND NO CHAIN NO RELEASE;
@@ -194,9 +194,6 @@ BEGIN
         FROM Membership AS m JOIN Contribution AS r ON r.member_id = m.member_id
         WHERE m.circle_id = v_circle AND r.cycle_id = p_cycle AND r.payment_status = 'paid';
 
-        IF v_paid_count <> v_member_count THEN
-            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'D8_POT_NOT_FUNDED';
-        END IF;
         IF EXISTS (
             SELECT 1 FROM Contribution AS r LEFT JOIN Membership AS m
               ON m.circle_id = v_circle AND m.member_id = r.member_id
@@ -220,18 +217,25 @@ BEGIN
             -- B1. Close bidding under the lock. State is tentative until commit.
             UPDATE Cycle SET status = 'closed' WHERE cycle_id = p_cycle;
 
-            -- B2. Highest valid eligible bid, then earliest submission, then bid ID.
+            -- B2. Highest valid (> 0%) eligible bid, then earliest submission, then bid ID.
             SELECT b.bid_id, b.member_id, b.discount_rate
             INTO v_bid, v_winner, v_rate
             FROM Bid AS b JOIN Membership AS m
               ON m.circle_id = v_circle AND m.member_id = b.member_id
             WHERE b.cycle_id = p_cycle AND m.d8_payout_turns = v_min_turns
-              AND b.discount_rate BETWEEN 0 AND 100
+              AND b.discount_rate > 0 AND b.discount_rate <= 100
               AND b.submitted_at >= CAST(v_scheduled AS DATETIME) AND b.submitted_at < v_deadline
             ORDER BY b.discount_rate DESC, b.submitted_at ASC, b.bid_id ASC
             LIMIT 1;
             IF v_bid IS NULL THEN
-                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'D8_NO_VALID_ELIGIBLE_BID';
+                -- No valid bid by the deadline: mark the cycle expired. The
+                -- organizer creates the next cycle manually.
+                UPDATE Cycle SET status = 'expired' WHERE cycle_id = p_cycle;
+                COMMIT AND NO CHAIN NO RELEASE;
+                LEAVE close_body;
+            END IF;
+            IF v_paid_count <> v_member_count THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'D8_POT_NOT_FUNDED';
             END IF;
             UPDATE Cycle SET d8_winning_bid_id = v_bid WHERE cycle_id = p_cycle;
 
@@ -245,6 +249,9 @@ BEGIN
                 SET v_base_cents = (v_discount_cents - v_extra_cents) / (v_member_count - 1);
             END IF;
         ELSE
+            IF v_paid_count <> v_member_count THEN
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'D8_POT_NOT_FUNDED';
+            END IF;
             IF v_deadline IS NOT NULL OR v_unit IS NOT NULL OR v_rule IS NOT NULL
                OR EXISTS (SELECT 1 FROM Bid WHERE cycle_id = p_cycle) THEN
                 SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'D8_TRACK_A_REQUIRES_NON_AUCTION';
@@ -279,7 +286,7 @@ BEGIN
         WHERE circle_id = v_circle AND member_id = v_winner;
 
         COMMIT AND NO CHAIN NO RELEASE;
-    END;
+    END close_body;
 END$$
 
 DELIMITER ;
