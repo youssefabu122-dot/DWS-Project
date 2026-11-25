@@ -1,0 +1,16 @@
+FROM node:24-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+ARG VITE_API_URL=http://localhost:3001
+ENV VITE_API_URL=$VITE_API_URL
+RUN npm run build
+FROM nginx:stable-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+# The CSP may only allow the API this build talks to (default: http://localhost:3001).
+ARG VITE_API_URL=http://localhost:3001
+RUN sed -i "s#connect-src 'self' http://localhost:3001#connect-src 'self' ${VITE_API_URL}#" /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+RUN chmod 644 /etc/nginx/conf.d/default.conf && chmod -R a+rX /usr/share/nginx/html
+EXPOSE 80

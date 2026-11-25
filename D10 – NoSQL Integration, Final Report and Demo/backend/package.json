@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.9.1",
+    "mysql2": "^3.24.4"
+  },
+  "name": "dws-d4-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  }
+}
